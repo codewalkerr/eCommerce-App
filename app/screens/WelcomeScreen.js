@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Image } from "react-native";
 import { ImageBackground } from "react-native";
-import { Text, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import AppButton from "../components/AppButton";
 
-export default function WelcomeScreen() {
+export default function WelcomeScreen({ navigation }) {
   return (
     <ImageBackground
       blurRadius={5}
@@ -15,8 +15,15 @@ export default function WelcomeScreen() {
         <Image source={require("../assets/hasan.png")} style={styles.logo} />
       </View>
       <View style={styles.buttonsContainer}>
-        <AppButton title="Login" />
-        <AppButton title="Register" color="black" />
+        <AppButton
+          title="Login"
+          onPress={() => navigation.navigate("LoginScreen")}
+        />
+        <AppButton
+          title="Register"
+          color="black"
+          onPress={() => navigation.navigate("RegisterScreen")}
+        />
       </View>
     </ImageBackground>
   );

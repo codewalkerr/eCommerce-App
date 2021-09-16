@@ -1,17 +1,30 @@
 import React from "react";
-import { StyleSheet, Text, View, title, subTitle, Image } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import colors from "../config/colors";
 import AppText from "./AppText";
+import { Image } from "react-native-expo-image-cache";
 
-const Card = ({ title, subTitle, image }) => {
+const Card = ({ title, subTitle, image, onPress, thumbnailUrl }) => {
   return (
-    <View style={styles.card}>
-      <Image style={styles.img} source={image} />
-      <View style={styles.detailContainer}>
-        <AppText style={styles.title}>Jacket for Sale</AppText>
-        <AppText style={styles.subTitle}>80$</AppText>
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View style={styles.card}>
+        <Image
+          style={styles.img}
+          preview={{ uri: thumbnailUrl }}
+          tint="light"
+          uri={image}
+        />
+        <View style={styles.detailContainer}>
+          <AppText style={styles.title} numberOfLines={1}>
+            {title}{" "}
+          </AppText>
+          <AppText style={styles.subTitle} numberOfLines={2}>
+            {subTitle}
+          </AppText>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
