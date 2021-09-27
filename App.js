@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -40,94 +40,38 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import AuthNavigator from "./app/navigation/AuthNavigator";
 import AppNavigator from "./app/navigation/AppNavigator";
 import OfflineNotice from "./app/components/OfflineNotice";
-
-const Link = () => {
-  const navigation = useNavigation();
-  return (
-    <Fragment>
-      <OfflineNotice />
-      <Button
-        title="Click"
-        onPress={() => navigation.navigate("TweetDetails", { id: "1" })}
-      />
-    </Fragment>
-  );
-};
-
-const Tweets = ({ navigation }) => (
-  <Screen>
-    <Text> Tweets </Text>
-    <Link />
-  </Screen>
-);
-
-const TweetDetails = ({ route }) => (
-  <Screen>
-    <Text> Tweets Deatils {route.params.id}</Text>
-  </Screen>
-);
-
-const Stack = createStackNavigator();
-const FeedNavigator = () => (
-  <Stack.Navigator>
-    <Stack.Screen
-      name="Tweets"
-      component={Tweets}
-      options={{
-        headerStyle: { backgroundColor: "black" },
-        headerTintColor: "white",
-      }}
-    />
-    <Stack.Screen
-      name="TweetDetails"
-      options={({ route }) => ({
-        title: route.params.id,
-      })}
-      component={TweetDetails}
-    />
-  </Stack.Navigator>
-);
-
-const Account = () => (
-  <Screen>
-    <Text>My Account</Text>
-  </Screen>
-);
-
-const Profile = () => (
-  <Screen>
-    <Text>My Profile</Text>
-  </Screen>
-);
-
-const Tab = createBottomTabNavigator();
-
-const TabNavigator = () => (
-  <Tab.Navigator
-    tabBarOptions={{
-      activeBackgroundColor: "dodgerblue",
-      activeTintColor: "white",
-    }}
-  >
-    <Tab.Screen
-      name="Feed"
-      component={FeedNavigator}
-      options={{
-        tabBarIcon: () => (
-          <MaterialCommunityIcons name="home" size={25} color="white" />
-        ),
-      }}
-    />
-    <Tab.Screen name="Account" component={Account} />
-    <Tab.Screen name="Profile" component={Profile} />
-  </Tab.Navigator>
-);
+import AuthContext from "./app/auth/context";
+import jwtDecode from "jwt-decode";
+import authStorage from "./app/auth/storage";
+import AppLoading from "expo-app-loading";
+import { navigationRef } from "./app/navigation/rootNavigation";
 
 const App = () => {
+  const [user, setUser] = useState();
+  const [isReady, setIsReady] = useState(false);
+
+  const restoreUser = async () => {
+    const user = await authStorage.getUser();
+    if (user) setUser(user);
+  };
+
+  if (!isReady) {
+    return (
+      <AppLoading
+        startAsync={restoreUser}
+        onFinish={() => setIsReady(true)}
+        onError={(error) => console.warn(error)}
+      />
+    );
+  }
+
   return (
-    <NavigationContainer theme={navigationTheme}>
-      <AppNavigator />
-    </NavigationContainer>
+    <AuthContext.Provider value={{ user, setUser }}>
+      <OfflineNotice />
+      <NavigationContainer ref={navigationRef} theme={navigationTheme}>
+        {user ? <AppNavigator /> : <AuthNavigator />}
+      </NavigationContainer>
+    </AuthContext.Provider>
   );
 };
 
