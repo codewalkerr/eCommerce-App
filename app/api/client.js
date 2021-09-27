@@ -1,8 +1,16 @@
 import { create } from "apisauce";
 import cache from "../utility/cache";
+import authStorage from "../auth/storage";
 
 const apiClient = create({
-  baseURL: "http://192.168.10.13:9000/api",
+  baseURL: "http://192.168.10.22:9000/api",
+});
+
+apiClient.addAsyncRequestTransform(async (request) => {
+  const authToken = authStorage.getToken;
+
+  if (!authToken) return;
+  request.headers["x-auth-token"] = authToken;
 });
 
 const get = apiClient.get;

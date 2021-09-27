@@ -25,28 +25,30 @@ const ListingScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <Screen style={styles.screen}>
-      {error && (
-        <Fragment>
-          <AppText>Couldn't retrieve the listings</AppText>
-          <Button title="Retry" onPress={loadListings} />
-        </Fragment>
-      )}
+    <Fragment>
       <ActivityIndicator visible={loading} />
-      <FlatList
-        data={listings}
-        keyExtractor={(listing) => listing.id.toString()}
-        renderItem={({ item }) => (
-          <Card
-            title={item.title}
-            subTitle={"$" + item.price}
-            image={item.images[0].url}
-            onPress={() => navigation.navigate("ListingDetails", item)}
-            thumbnailUrl={item.images[0].thumbnailUrl}
-          />
+      <Screen style={styles.screen}>
+        {error && (
+          <Fragment>
+            <AppText>Couldn't retrieve the listings</AppText>
+            <Button title="Retry" onPress={loadListings} />
+          </Fragment>
         )}
-      />
-    </Screen>
+        <FlatList
+          data={listings}
+          keyExtractor={(listing) => listing.id.toString()}
+          renderItem={({ item }) => (
+            <Card
+              title={item.title}
+              subTitle={"$" + item.price}
+              image={item.images[0].url}
+              onPress={() => navigation.navigate("ListingDetails", item)}
+              thumbnailUrl={item.images[0].thumbnailUrl}
+            />
+          )}
+        />
+      </Screen>
+    </Fragment>
   );
 };
 

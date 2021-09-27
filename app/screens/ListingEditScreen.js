@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 
 import * as Yup from "yup";
 import CategoryPickerItem from "../components/CategoryPickerItem";
@@ -16,6 +16,7 @@ import Screen from "../components/Screen";
 import * as Location from "expo-location";
 import useLocation from "../hooks/useLocation";
 import UploadScreen from "./UploadScreen";
+import { KeyboardAvoidingView } from "react-native";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),

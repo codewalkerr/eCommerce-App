@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { StyleSheet } from "react-native";
 import AppTextInput from "../AppTextInput";
 import { useFormikContext } from "formik";
@@ -10,7 +10,7 @@ const AppFormField = ({ name, ...otherProps }) => {
     useFormikContext();
 
   return (
-    <React.Fragment>
+    <Fragment>
       <AppTextInput
         onChangeText={(text) => setFieldValue(name, text)}
         value={values[name]}
@@ -19,7 +19,7 @@ const AppFormField = ({ name, ...otherProps }) => {
       />
 
       <ErrorMessage error={errors[name]} visible={touched[name]} />
-    </React.Fragment>
+    </Fragment>
   );
 };
 
